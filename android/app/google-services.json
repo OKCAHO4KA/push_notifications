@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "453799810715",
+    "project_id": "flutter-projects-7e9ef",
+    "storage_bucket": "flutter-projects-7e9ef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:453799810715:android:9c6ea8eb4c8f1388a7583e",
+        "android_client_info": {
+          "package_name": "com.xana.push_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCugInNm0wfBGBdjBU4uPEJgbuLBy7BVzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
