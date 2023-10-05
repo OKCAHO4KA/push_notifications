@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:push_app/config/local_notifications/local_notifications.dart';
 import 'package:push_app/domain/entities/push_message.dart';
 import 'package:push_app/firebase_options.dart';
 
@@ -20,7 +21,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
+  int pushMessageId = 0;
   NotificationsBloc() : super(const NotificationsState()) {
     // on<NotificationsEvent>((event, emit) {});
     on<NotificationsStatusChanged>(_notificationsStatusChanged);
@@ -59,8 +60,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
 
   void _getFCMToken() async {
     if (state.status != AuthorizationStatus.authorized) return;
-    await messaging.getToken();
-    // print(token);
+    final token = await messaging.getToken();
+    print(token);
   }
 
   void handleRemoteMessage(RemoteMessage message) {
@@ -77,8 +78,13 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
             : message.notification!.apple?.imageUrl,
         data: message.data);
 
-    // print(notification);
+    print(notification);
     add(NotificationReceived(pushMessage: notification));
+    LocalNotification.showLocalNotification(
+        id: ++pushMessageId,
+        body: notification.body,
+        data: notification.data.toString(),
+        titulo: notification.title);
   }
 
   void _onForegroundMessage() {
@@ -96,6 +102,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       provisional: false,
       sound: true,
     );
+    //solicitar permiso al local notifications
+    await LocalNotification.requestPermissionLocalNotifications();
     add(NotificationsStatusChanged(status: settings.authorizationStatus));
     settings.authorizationStatus;
   }
